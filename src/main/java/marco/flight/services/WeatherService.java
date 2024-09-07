@@ -1,8 +1,10 @@
 package marco.flight.services;
 
+import marco.flight.helper.Config;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.ObjectInputFilter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,8 +12,10 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class WeatherService {
 
+    Config config = new Config();
+
     private static final String API_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/";
-    private static final String API_KEY = "GZFF79XTV5ZBPGSXXF7DPH29S";
+    private final String API_KEY = config.getApiKey();
 
     public String getWeather(double latitude, double longitude, LocalDateTime displayDate) {
         RestTemplate restTemplate = new RestTemplate();
