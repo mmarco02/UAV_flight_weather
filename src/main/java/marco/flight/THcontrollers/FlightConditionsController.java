@@ -29,17 +29,14 @@ public class FlightConditionsController {
         LocalDateTime displayDate = date != null ? LocalDateTime.parse(date) : currentDate;
 
         try {
-            // Fetch weather data
             String weatherData = weatherService.getWeather(latitude, longitude, displayDate);
             JSONObject weatherJson = new JSONObject(weatherData);
             JSONArray days = weatherJson.getJSONArray("days");
             String timezone = weatherJson.getString("timezone");
 
-            // Calculate index based on days range
             int daysRange = (int) LocalDate.now().until(displayDate.toLocalDate(), java.time.temporal.ChronoUnit.DAYS);
 
             if (daysRange < 0 || daysRange >= days.length()) {
-                // Out of range, return an error page
                 model.addAttribute("errorMessage", "The selected date is out of the available range.");
                 return "error";
             }
@@ -61,10 +58,9 @@ public class FlightConditionsController {
             String[] weatherStations = daysJSONObject.getString("stations").split(",");
             List<String> weatherStationsList = Arrays.asList(weatherStations);
 
-            // Evaluate flight conditions
+
             String flightSuggestion = evaluateFlightConditions(tempMax, tempMin, windSpeed, windGust, visibility, rain, snow, humidity);
 
-            // Add attributes to model
             model.addAttribute("latitude", latitude);
             model.addAttribute("longitude", longitude);
             model.addAttribute("weatherDescription", daysJSONObject.getString("description"));

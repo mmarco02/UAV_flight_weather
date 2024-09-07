@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 public class WeatherService {
 
     private static final String API_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/";
-    private static final String API_KEY = "GZFF79XTV5ZBPGSXXF7DPH29S";  // Replace with your actual key
+    private static final String API_KEY = "GZFF79XTV5ZBPGSXXF7DPH29S";
 
     public String getWeather(double latitude, double longitude, LocalDateTime displayDate) {
         RestTemplate restTemplate = new RestTemplate();
