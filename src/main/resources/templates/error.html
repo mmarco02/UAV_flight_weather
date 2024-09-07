@@ -28,6 +28,9 @@
         p {
             font-size: 1.2em;
         }
+        span {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -35,6 +38,8 @@
 <div class="container">
     <h1>Error</h1>
     <p th:text="${errorMessage}"></p>
+    <a href="javascript:void(0)" onclick="window.history.back()" style="color: #007BFF;">Go back</a>
+    <span> or </span>
     <a href="/" style="color: #007BFF;">Go back to the main page</a>
 </div>
 

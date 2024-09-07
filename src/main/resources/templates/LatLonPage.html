@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>UAV Flight conditions</title>
+  <title>UAV Flight Conditions</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -58,18 +58,111 @@
     button:focus {
       outline: none;
     }
+    .history-container {
+      margin-top: 20px;
+    }
+    .history-button {
+      display: inline-block;
+      margin: 5px;
+      padding: 10px 15px;
+      background-color: cornflowerblue;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .history-button:hover {
+      background-color: royalblue;
+    }
   </style>
 </head>
 <body>
 <div class="container">
   <h1>Enter Latitude and Longitude</h1>
-  <form th:action="@{/flight-conditions}" method="get">
+  <form th:action="@{/flight-conditions}" method="get" onsubmit="saveToHistory()">
     <label for="latitude">Latitude:</label>
     <input type="text" id="latitude" name="latitude" placeholder="Enter latitude" required>
     <label for="longitude">Longitude:</label>
     <input type="text" id="longitude" name="longitude" placeholder="Enter longitude" required>
     <button type="submit">Get Weather Info</button>
   </form>
+
+  <div class="history-container" id="history-container">
+    <h3>Previous Searches:</h3>
+    <!-- History buttons will be dynamically added here -->
+  </div>
 </div>
+
+<script>
+  function saveToHistory() {
+    const latitude = document.getElementById('latitude').value;
+    const longitude = document.getElementById('longitude').value;
+
+    // Get history from localStorage or initialize an empty array
+    let history = JSON.parse(localStorage.getItem('locationHistory')) || [];
+
+    // Check if the location is already in history
+    const locationExists = history.some(location => location.latitude === latitude && location.longitude === longitude);
+
+    // If location is not in history, add it
+    if (!locationExists) {
+      history.push({ latitude: latitude, longitude: longitude });
+
+      // Store updated history in localStorage
+      localStorage.setItem('locationHistory', JSON.stringify(history));
+    }
+  }
+
+  // Retrieve and display history as buttons
+  function loadHistory() {
+    const historyContainer = document.getElementById('history-container');
+    historyContainer.innerHTML = ''; // Clear current history buttons
+
+    let history = JSON.parse(localStorage.getItem('locationHistory')) || [];
+
+
+    // Remove duplicates from history
+    history = history.filter((location, index, self) =>
+      index === self.findIndex((t) => (
+        t.latitude === location.latitude && t.longitude === location.longitude
+      ))
+    );
+
+    // Create a button for each history entry
+    history.forEach((location, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'history-button';
+      btn.innerText = `Lat: ${location.latitude}, Lon: ${location.longitude}`;
+      btn.onclick = () => fillForm(location.latitude, location.longitude);
+      historyContainer.appendChild(btn);
+    });
+  }
+
+  function fillForm(latitude, longitude) {
+    document.getElementById('latitude').value = latitude;
+    document.getElementById('longitude').value = longitude;
+  }
+
+  window.onload = function() {
+    loadHistory();
+
+    // If there are saved cookies for latitude and longitude, fill them in
+    const savedLatitude = getCookie('latitude');
+    const savedLongitude = getCookie('longitude');
+
+    if (savedLatitude) {
+      document.getElementById('latitude').value = savedLatitude;
+    }
+    if (savedLongitude) {
+      document.getElementById('longitude').value = savedLongitude;
+    }
+  }
+
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+</script>
 </body>
 </html>

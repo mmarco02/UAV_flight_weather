@@ -12,7 +12,6 @@ import org.json.JSONArray;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class FlightConditionsController {
 
             JSONObject daysJSONObject = days.getJSONObject(daysRange);
 
-            // Extract weather information
+
             double tempMax = daysJSONObject.getDouble("tempmax");
             double tempMin = daysJSONObject.getDouble("tempmin");
             double windSpeed = daysJSONObject.getDouble("windspeed");
