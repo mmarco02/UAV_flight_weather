@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Flight Conditions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007BFF;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .grid-item {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #007BFF;
+        }
+
+        .flight-suggestion {
+            text-align: center;
+            padding: 15px;
+            background-color: #e7f3ff;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #0056b3;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .flight-suggestion.bad {
+            background-color: #ffe7e7;
+            color: #d9534f;
+        }
+
+        .date-navigation {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .date-navigation a {
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .date-navigation a:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="date-navigation">
+        <a href="#" th:href="@{/flight-conditions(latitude=${latitude}, longitude=${longitude}, date=${previousDate})}" title="Previous Day">&larr;</a>
+        <a href="#" th:href="@{/flight-conditions(latitude=${latitude}, longitude=${longitude}, date=${nextDate})}" title="Next Day">&rarr;</a>
+    </div>
+
+    <h1>Flight Conditions for Location</h1>
+
+    <div class="grid">
+        <div class="grid-item">
+            <h2>Date & Time</h2>
+            <p>Date: <span th:text="${date.year} + '/' + ${date.monthValue} +  '/' +  ${date.dayOfMonth}"></span></p>
+            <p>Time: <span th:text="${time.getHour()} + ':' + ${time.getMinute()}"></span></p>
+        </div>
+
+        <div class="grid-item">
+            <h2>Location</h2>
+            <p>Latitude: <span th:text="${latitude}"></span></p>
+            <p>Longitude: <span th:text="${longitude}"></span></p>
+            <p>Timezone: <span th:text="${timezone}"></span></p>
+        </div>
+
+        <div class="grid-item">
+            <h2>Temperature</h2>
+            <p>Maximum Temperature: <span th:text="${tempMax}"></span> °C</p>
+            <p>Minimum Temperature: <span th:text="${tempMin}"></span> °C</p>
+        </div>
+
+        <div class="grid-item">
+            <h2>Weather</h2>
+            <p><span th:text="${weatherDescription}"></span></p>
+        </div>
+
+        <div class="grid-item">
+            <h2>Daylight Conditions</h2>
+            <p>Sunrise: <span th:text="${sunrise}"></span></p>
+            <p>Sunset: <span th:text="${sunset}"></span></p>
+        </div>
+
+        <div class="grid-item">
+            <h2>Weather Stations</h2>
+            <span th:each="station : ${weatherStations}">
+                <p><span th:text="${station.substring(1, station.length() - 1)}"></span></p>
+            </span>
+        </div>
+
+        <div class="grid-item">
+            <h2>Wind Information</h2>
+            <p>Wind Speed: <span th:text="${windSpeed}"></span> km/h</p>
+            <p>Wind Gusts: <span th:text="${windGust}"></span> km/h</p>
+            <p>Wind Direction: <span th:text="${windDir}"></span>°</p>
+        </div>
+
+        <div class="grid-item">
+            <h2>Visibility and Precipitation</h2>
+            <p>Visibility: <span th:text="${visibility}"></span> km</p>
+            <p>Rain: <span th:text="${rain}"></span> mm</p>
+            <p>Snow: <span th:text="${snow}"></span> mm</p>
+            <p>Humidity: <span th:text="${humidity}"></span> %</p>
+        </div>
+    </div>
+
+    <div class="flight-suggestion" th:classappend="${flightSuggestion} == 'Poor conditions for flying. It might be unsafe' ? 'bad' : ''">
+        <p th:text="${flightSuggestion}"></p>
+    </div>
+</div>
+
+</body>
+</html>
