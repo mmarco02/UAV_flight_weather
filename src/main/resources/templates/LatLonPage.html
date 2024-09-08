@@ -81,9 +81,11 @@
   <h1>Enter Latitude and Longitude</h1>
   <form th:action="@{/flight-conditions}" method="get" onsubmit="saveToHistory()">
     <label for="latitude">Latitude:</label>
-    <input type="text" id="latitude" name="latitude" placeholder="Enter latitude" required>
+    <input type="text" id="latitude" name="latitude" placeholder="Enter latitude">
     <label for="longitude">Longitude:</label>
-    <input type="text" id="longitude" name="longitude" placeholder="Enter longitude" required>
+    <input type="text" id="longitude" name="longitude" placeholder="Enter longitude">
+    <!-- <h2 style="border-top: 1px solid #ddd; padding-top: 20px;">Or</h2>
+    <input type="text" id="address" name="address" placeholder="Enter address" oninput="resolveAddress()"> -->
     <button type="submit">Get Weather Info</button>
   </form>
 
@@ -180,6 +182,12 @@
         // Automatically populate the latitude and longitude fields
         document.getElementById('latitude').value = position.coords.latitude;
         document.getElementById('longitude').value = position.coords.longitude;
+
+        fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&localityLanguage=en`)
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById('address').value = data.locality;
+          });
       }, function(error) {
         alert('Error getting location: ' + error.message);
       });
