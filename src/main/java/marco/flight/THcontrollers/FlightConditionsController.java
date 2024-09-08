@@ -37,6 +37,7 @@ public class FlightConditionsController {
 
             if (daysRange < 0 || daysRange >= days.length()) {
                 model.addAttribute("errorMessage", "The selected date is out of the available range.");
+                System.err.println("The selected date is out of the available range.");
                 return "error";
             }
 
@@ -86,6 +87,7 @@ public class FlightConditionsController {
 
         } catch (JSONException e) {
             model.addAttribute("errorMessage", "Error processing weather data.");
+            System.err.println(e);
             return "error";
         }
     }
