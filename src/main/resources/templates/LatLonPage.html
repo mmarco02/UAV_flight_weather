@@ -87,10 +87,14 @@
     <button type="submit">Get Weather Info</button>
   </form>
 
+  <button class="location-button" onclick="getLocation()" style="background: limegreen; margin: 1em">Use Current Location</button>
+
+  <h5>Previous Searches:</h5>
   <div class="history-container" id="history-container">
-    <h3>Previous Searches:</h3>
     <!-- History buttons will be dynamically added here -->
   </div>
+
+    <button onclick="clearHistory()" style="background: red; margin: 1em">Clear History</button>
 </div>
 
 <script>
@@ -138,6 +142,12 @@
     });
   }
 
+  function clearHistory() {
+    localStorage.clear();
+    location.reload();
+    loadHistory();
+  }
+
   function fillForm(latitude, longitude) {
     document.getElementById('latitude').value = latitude;
     document.getElementById('longitude').value = longitude;
@@ -162,6 +172,20 @@
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        // Automatically populate the latitude and longitude fields
+        document.getElementById('latitude').value = position.coords.latitude;
+        document.getElementById('longitude').value = position.coords.longitude;
+      }, function(error) {
+        alert('Error getting location: ' + error.message);
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
   }
 </script>
 </body>
